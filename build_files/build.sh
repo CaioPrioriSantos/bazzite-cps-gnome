@@ -2,9 +2,6 @@
 # ==============================================================================
 # bazzite-cps-gnome — build.sh
 # KERNEL_FLAVOR: "bazzite" (default) | "cachyos"
-#
-# Variante bazzite : kernel Bazzite + melhorias CachyOS runtime
-# Variante cachyos : kernel CachyOS LTO (Clang + ThinLTO + AutoFDO + Propeller) + melhorias runtime
 # ==============================================================================
 set -ouex pipefail
 
@@ -13,7 +10,9 @@ KERNEL_FLAVOR="${KERNEL_FLAVOR:-bazzite}"
 rm -f /etc/yum.repos.d/*terra*.repo || true
 dnf5 config-manager setopt terra.enabled=0 terra-extras.enabled=0 terra-mesa.enabled=0 2>/dev/null || true
 
-dnf5 install -y \
+dnf5 copr enable -y lukenukem/asus-linux
+
+dnf5 install -y --skip-installed \
     tmux \
     asusctl \
     supergfxctl \
