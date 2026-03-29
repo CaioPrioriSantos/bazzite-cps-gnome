@@ -12,8 +12,7 @@ dnf5 config-manager setopt terra.enabled=0 terra-extras.enabled=0 terra-mesa.ena
 
 dnf5 copr enable -y lukenukem/asus-linux
 
-dnf5 install -y --skip-installed \
-    tmux \
+dnf5 install -y \
     asusctl \
     supergfxctl \
     rog-control-center
@@ -23,13 +22,43 @@ systemctl enable asusd.service
 systemctl enable supergfxd.service
 
 dnf5 copr enable -y bieszczaders/kernel-cachyos-addons
-
-dnf5 install -y \
-    cachyos-settings \
-    scx-scheds
+dnf5 install -y cachyos-settings scx-scheds
 
 systemctl enable scx.service
 echo 'SCX_SCHEDULER=scx_lavd' > /etc/default/scx
+
+cat > /usr/lib/sysctl.d/99-bazzite-cps-perf.conf << 'SYSCTL'
+vm.vfs_cache_pressure = 50
+vm.dirty_bytes = 268435456
+vm.dirty_background_bytes = 67108864
+vm.dirty_writeback_centisecs = 1500
+vm.page-cluster = 0
+kernel.nmi_watchdog = 0
+net.core.netdev_max_backlog = 16384
+fs.file-max = 2097152
+SYSCTL
+
+cat > /usr/lib/modprobe.d/99-bazzite-cps-audio.conf << 'MODPROBE'
+options snd_hda_intel power_save=0
+MODPROBE
+
+cat > /usr/lib/modprobe.d/99-bazzite-cps-watchdog.conf << 'MODPROBE'
+blacklist iTCO_wdt
+blacklist sp5100_tco
+MODPROBE
+
+cat > /usr/lib/udev/rules.d/99-bazzite-cps-audio-timers.rules << 'UDEV'
+KERNEL=="rtc0", GROUP="audio"
+KERNEL=="hpet", GROUP="audio"
+UDEV
+
+cat > /usr/lib/udev/rules.d/99-bazzite-cps-audio-pm.rules << 'UDEV'
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="card*", DRIVERS=="snd_hda_intel", \
+  TEST!="/run/udev/snd-hda-intel-powersave", \
+  RUN+="/usr/bin/bash -c 'touch /run/udev/snd-hda-intel-powersave; \
+    [[ $$(cat /sys/class/power_supply/BAT0/status 2>/dev/null) != \"Discharging\" ]] && \
+    echo 0 > /sys/module/snd_hda_intel/parameters/power_save'"
+UDEV
 
 if [[ "${KERNEL_FLAVOR}" == "cachyos" ]]; then
 
