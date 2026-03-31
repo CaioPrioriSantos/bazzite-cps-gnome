@@ -271,6 +271,7 @@ org.fedoraproject.MediaWriter
 org.gnome.Extensions
 page.tesk.Refine
 io.missioncenter.MissionCenter
+org.gnome.TextEditor
 FLATPAKEOF
 
 cat > /usr/lib/systemd/system/bazzite-cps-flatpaks.service << 'SVCEOF'
