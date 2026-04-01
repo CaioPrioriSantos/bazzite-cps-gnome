@@ -260,7 +260,6 @@ org.videolan.VLC
 com.stremio.Stremio
 com.transmissionbt.Transmission
 com.vysp3r.ProtonPlus
-org.ardour.Ardour
 org.mozilla.Thunderbird
 org.zotero.Zotero
 org.telegram.desktop
@@ -268,7 +267,7 @@ com.spotify.Client
 ar.com.tuxguitar.TuxGuitar
 org.gnome.Calendar
 org.fedoraproject.MediaWriter
-org.gnome.Extensions
+com.mattjakeman.ExtensionManager
 page.tesk.Refine
 io.missioncenter.MissionCenter
 org.gnome.TextEditor
@@ -294,6 +293,23 @@ SVCEOF
 
 systemctl enable bazzite-cps-flatpaks.service
 
+
+# Ardour nativo + plugins de áudio
+dnf5 install -y \
+    ardour \
+    lsp-plugins-lv2 \
+    calf-lv2 \
+    mda-lv2 \
+    swh-lv2 \
+    swh-plugins \
+    zam-plugins \
+    x42-plugins \
+    guitarix-lv2 \
+    helm \
+    zynaddsubfx \
+    yoshimi \
+    tap-plugins \
+    fil-plugins
 
 # Corrigir bbr → cubic (bbr falha no boot em composefs)
 if [ -f /usr/lib/sysctl.d/75-networking.conf ]; then
