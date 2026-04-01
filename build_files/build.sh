@@ -298,14 +298,8 @@ systemctl enable bazzite-cps-flatpaks.service
 dnf5 install -y \
     ardour \
     lsp-plugins-lv2 \
-    calf-lv2 \
-    mda-lv2 \
-    swh-lv2 \
-    swh-plugins \
+    calf \
     zam-plugins \
-    x42-plugins \
-    guitarix-lv2 \
-    helm \
     zynaddsubfx \
     yoshimi \
     tap-plugins \
