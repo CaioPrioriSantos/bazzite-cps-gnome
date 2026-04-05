@@ -319,6 +319,7 @@ dnf5 install -y \
     rclone \
     restic
 dnf5 install -y python3-ramalama
+dnf5 install -y python3.10 python3.12
 echo 'iptable_nat' > /usr/lib/modules-load.d/iptable_nat.conf
 dnf5 install -y \
     turbostat \
@@ -357,7 +358,6 @@ com.mattjakeman.ExtensionManager
 page.tesk.Refine
 io.missioncenter.MissionCenter
 org.gnome.TextEditor
-org.ardour.Ardour
 FLATPAKEOF
 cat > /usr/lib/systemd/system/bazzite-cps-flatpaks.service << 'SVCEOF'
 [Unit]
@@ -370,7 +370,7 @@ Type=oneshot
 Restart=on-failure
 RestartSec=30
 RemainAfterExit=yes
-ExecStart=/usr/bin/bash -c 'mkdir -p /var/lib/bazzite-cps && flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && xargs flatpak install --system --noninteractive flathub < /usr/share/bazzite-cps/flatpaks.list && touch /var/lib/bazzite-cps/.flatpaks-installed && flatpak override --system org.ardour.Ardour --filesystem=host'
+ExecStart=/usr/bin/bash -c 'mkdir -p /var/lib/bazzite-cps && flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && xargs flatpak install --system --noninteractive flathub < /usr/share/bazzite-cps/flatpaks.list && touch /var/lib/bazzite-cps/.flatpaks-installed'
 [Install]
 WantedBy=multi-user.target
 SVCEOF
