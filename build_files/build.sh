@@ -168,8 +168,16 @@ if [[ "${KERNEL_FLAVOR}" == "cachyos" ]]; then
 RON
 fi
 dnf5 copr enable -y bieszczaders/kernel-cachyos-addons
-systemctl enable scx.service 2>/dev/null || true
-echo 'SCX_SCHEDULER=scx_lavd' > /etc/default/scx
+# SCX — scx_lavd com autopower (segue EPP do tuned/asusd)
+mkdir -p /usr/share/scx_loader
+cat > /usr/share/scx_loader/config.toml << 'SCXCFG'
+default_sched = "scx_lavd"
+default_mode = "Auto"
+
+[scheds.scx_lavd]
+auto_mode = ["--autopower"]
+SCXCFG
+systemctl enable scx_loader.service
 cat > /usr/lib/sysctl.d/99-bazzite-cps-perf.conf << 'SYSCTL'
 vm.vfs_cache_pressure = 50
 vm.dirty_bytes = 268435456
@@ -480,10 +488,6 @@ SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="/usr/bin/iw dev wlan0 set po
 SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="/usr/bin/iw dev wlan0 set power_save on"
 UDEV
 
-cat > /usr/lib/udev/rules.d/99-bazzite-cps-scx-power.rules << 'UDEV'
-SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="/usr/bin/scxctl start --sched scx_lavd", RUN+="/usr/bin/scxctl switch --sched scx_lavd --mode gaming"
-SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="/usr/bin/scxctl stop"
-UDEV
 
 
 dnf5 clean all
