@@ -465,7 +465,6 @@ dnf5 install -y \
     ladspa-autotalent-plugins \
     ladspa-rev-plugins \
     ladspa-vco-plugins \
-    ladspa-guitarix-plugins \
     lsp-plugins-ladspa
 # ------------------------------------------------------------------------------
 # GTK4 Python bindings + pyenv build dependencies
